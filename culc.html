@@ -1,0 +1,202 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Калькулятор</title>
+<style>
+.calculator {
+    width: 260px;
+    height: 385px;
+    margin: 0px;
+    padding: 5px 5px 5px 5px;
+    text-align: center;
+    background-color: rgb(162, 221, 255);
+    border-radius: 10px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.viewer {
+    width: 245px;
+    height: 50px;
+    margin: 5px;
+    padding: 0px 5px;
+    border-radius: 10px;
+    text-align: right;
+    font-size: 30px;
+    font-family: Impact, Charcoal, sans-serifs;
+    color: rgb(234, 231, 255);
+    background-color: rgba(45, 67, 189, 0.534);
+}
+
+button {
+    background-color: rgb(156, 148, 255);
+    border: none;
+    border-radius: 10px;
+    margin: 5px 5px;
+    transition: all 500ms ease;
+}
+button:hover {
+	background: rgb(106, 96, 255);
+	
+	
+}
+
+
+.num, .oper, .equals {
+    width: 55px;
+    margin: 5px, 5px, 5px, 5px;
+    height: 55px;
+    color:rgb(234, 231, 255);
+    font-size: 25px;
+    font-family: Impact, Charcoal, sans-serifs;
+}
+
+.clear, .delete {
+    font-size: 25px;
+    font-family: Impact, Charcoal, sans-serifs;
+    color:rgb(234, 231, 255);
+    width: 80px;
+    height: 55px;
+}
+
+
+</style>
+</head>
+<body>
+    
+<div id="calculator" class="calculator">
+<div id="viewer" class="viewer">0</div>
+<div class="row">
+    <button id="clear" class="clear">C</button>
+    <button id="delete" class="delete">Del</button>
+    <button data-oper="plus" class="oper">+</button>
+</div>
+<div class="row">
+    <button data-num="1" class="num">1</button>
+    <button data-num="2" class="num">2</button>
+    <button data-num="3" class="num">3</button>
+    <button data-oper="minus" class="oper">-</button>
+</div>
+<div class="row">
+    <button data-num="4" class="num">4</button>
+    <button data-num="5" class="num">5</button>
+    <button data-num="6" class="num">6</button>
+    <button data-oper="times" class="oper">x</button>
+</div>
+<div class="row">
+    <button data-num="7" class="num">7</button>
+    <button data-num="8" class="num">8</button>
+    <button data-num="9" class="num">9</button>
+    <button data-oper="divide" class="oper">/</button>
+</div>
+<div class="row">
+    <button data-num="0" class="num">0</button>
+    <button id="equals" class="equals" data-result="">=</button>
+</div>
+</div>
+
+
+    <script>
+        (function() {
+        "use strict";
+
+        var el = function(element) {
+            if (element.charAt(0) == "#") {
+                return document.querySelector(element);
+            }
+        return document.querySelectorAll(element);
+        };
+
+        var viewer = el("#viewer"),
+            equals = el("#equals"), nums = el(".num"), oper = el(".oper"),
+            theNum = "", oldNum = "",
+            resultNum, operator;
+
+        var setNum = function() {
+            if (resultNum) {
+                theNum = this.getAttribute("data-num");
+                resultNum = "";
+            } else {
+                theNum += this.getAttribute("data-num");
+            }
+            viewer.innerHTML = theNum;
+        };
+
+        var moveNum = function() {
+            oldNum = theNum;
+            theNum = "";
+            operator = this.getAttribute("data-oper");
+            equals.setAttribute("data-result", "");
+        };
+
+        var displayNum = function() {
+            oldNum = parseInt(oldNum);
+            theNum = parseInt(theNum);
+            switch (operator) {
+            case "plus":
+                resultNum = oldNum + theNum;
+                break;
+
+            case "minus":
+                resultNum = oldNum - theNum;
+                break;
+
+            case "times":
+                resultNum = oldNum * theNum;
+                break;
+
+            case "divide":
+                if (theNum == 0) {
+                resultNum = "Don't divide by 0"
+                break;   
+        }
+        resultNum = oldNum / theNum;
+        break;
+
+        default:
+        resultNum = theNum;
+        }
+
+        if (isNaN(resultNum) && theNum!=0) {
+            resultNum = "Error";
+        }
+
+        viewer.innerHTML = resultNum;
+        equals.setAttribute("data-result", resultNum);
+        oldNum = 0;
+        theNum = resultNum;
+        };
+
+        var clearAll = function() {
+            oldNum = "";
+            theNum = "";
+            viewer.innerHTML = "0";
+            equals.setAttribute("data-result", resultNum);
+        };
+
+        var deleteNum = function() {
+            theNum = "";
+            viewer.innerHTML = "0";
+            equals.setAttribute("data-result", resultNum);
+        };
+
+        for (var i = 0, l = nums.length; i < l; i++) {
+            nums[i].onclick = setNum;
+        }
+
+        for (var i = 0, l = oper.length; i < l; i++) {
+            oper[i].onclick = moveNum;
+        }
+
+        equals.onclick = displayNum;
+        el("#clear").onclick = clearAll;
+        el("#delete").onclick = deleteNum;
+
+        }());
+
+    </script>
+</body>
+</html>
